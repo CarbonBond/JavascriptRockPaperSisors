@@ -1,54 +1,116 @@
+const buttonContainer = document.querySelector("#buttonContainer")
+buttonContainer.style.cssText = 
+    `display: flex;
+    justify-content: center;`
 
+const buttonRock = document.createElement('button');
+buttonRock.id = 'rock';
+buttonRock.classList.add('RPS');
+buttonRock.textContent = "Rock";
 
+const buttonPaper = document.createElement('button');
+buttonPaper.id = 'paper';
+buttonPaper.classList.add('RPS');
+buttonPaper.textContent = "Paper"
 
-//log Rock paper sissors ~ Project
-console.log("Rock Paper Sissors ~ A Project created by CarbonBond, Instructions from The Odin Project");
+const buttonSissors = document.createElement('button');
+buttonSissors.id = 'sissors';
+buttonSissors.classList.add('RPS');
+buttonSissors.textContent = "Sissors";
+
+buttonContainer.appendChild(buttonRock);
+buttonContainer.appendChild(buttonPaper);
+buttonContainer.appendChild(buttonSissors);
+
+const rpsButtons = document.querySelectorAll('.RPS');
+
+rpsButtons.forEach((button) => {
+    
+    button.addEventListener('click', () => {
+        playGame(button.id)
+    })
+
+    button.style.cssText = `    
+        margin: 10px;
+        font-size: 200%;
+        cursor: pointer;`
+})
+
+const scoreContainer = document.querySelector('#scoreContainer');
 
 //Create a varible that stores game wins for the player
 let playerWins = 0;
 //create a varible that stores game wins for the comupter
 let computerWins = 0;
-//loop game five times
-for (let i = 1; i<6; i++) {
+//create a varible that stores how many rounds have been played
+let rounds = 1;
 
-//log First game
-    console.log(`game ${i} START `);
-//get player input into a varible
-    playerSelection = getPlayerSelection();
-// get computer to choose Rock paper or sissors into a varible
+
+
+
+
+
+
+
+
+function playGame(playerSelection){
+    //log Rock paper sissors ~ Project
+    console.log("Rock Paper Sissors ~ A Project created by CarbonBond, Instructions from The Odin Project");
+    //log First game
+    console.log(`game ${rounds}:START `);
+    //get player input into a varible
+    //playerSelection = getPlayerSelection();
+    // get computer to choose Rock paper or sissors into a varible
     computerSelection = getComputerSelection();
-// compare computer and players selections
-    result = playRound(playerSelection, computerSelection);
-// log a winner of this round
+    // compare computer and players selections
+    result = checkRound(playerSelection, computerSelection);
+    //updatescore and log the result
+    updateScore(result, playerSelection, computerSelection);
+    // log whoever wins the game
+    logWinner();
+}
+
+
+function logWinner(){
+    if(playerWins === 5){
+        scoreContainer.textContent = "You won the game!";
+        playerWins = 0;
+        computerWins = 0;
+        rounds = 0;
+    } else if (computerWins == 5) {
+        scoreContainer.textContent ="You lost the game!";
+        playerWins = 0;
+        computerWins = 0;
+        rounds = 0;
+    }
+}
+
+function updateScore(result, playerSelection, computerSelection){
     switch(result){
         case "tie":
-            console.log(`Player: ${playerSelection} | Computer: ${computerSelection};  
-            You tied this round`);
+            console.log(`Player: ${playerSelection} | Computer: ${computerSelection}`);
+            console.log(`   You tied this round`);
             break;
         case "player":
-            console.log(`Player: ${playerSelection} | Computer: ${computerSelection};  
-            You won this round`);
+            console.log(`Player: ${playerSelection} | Computer: ${computerSelection}`);
+            console.log(`   You won this round`);
             playerWins += 1;
             break;
         case "computer":
-            console.log(`Player: ${playerSelection} | Computer: ${computerSelection};  
-            You Lost this round!`);
+            console.log(`Player: ${playerSelection} | Computer: ${computerSelection}`);
+            console.log(`   You Lost this round!`);
             computerWins += 1;     
             break;       
-    }
-    console.log(`Current Score: Player: ${playerWins} | Computer: ${computerWins}`)
-
-}//Ending of game loop
-// log whoever wins the game
-if(playerWins > computerWins){
-    console.log("You won the game!");
-} else if (playerWins < computerWins) {
-    console.log("You lost the game!");
-} else {
-    console.log("The game was a tie!");
+    }  
+    scoreContainer.textContent = `
+    Player selecction: ${playerSelection} | Computer: ${computerSelection}
+    |||||||||||
+    Current Score: Player: ${playerWins} | Computer: ${computerWins}
+    `
+    rounds += 1;
 }
 
-function playRound(playerSelection, computerSelection){
+function checkRound(playerSelection, computerSelection){
     let result = "";
     if(playerSelection === "rock") {
         switch(computerSelection){
@@ -90,19 +152,21 @@ function playRound(playerSelection, computerSelection){
         }
     } 
         
-    if (result === "") {console.error("function playRound did not receave a result");}
-    
+    if (result === "") {console.error("function checkRound did not receave a result");}
     return result;
 }
 
-function getPlayerSelection() {
-    playerSelection = prompt(`Rock, Paper, or Sissors`, "");
+function getPlayerSelection() { 
+    do{
+        playerSelection = prompt(`Rock, Paper, or Sissors`, ""); //Player doesn't hit cancel
+    } while (playerSelection == null)
     playerSelection = playerSelection.toLowerCase();
     //make player input into all lowercase
-    while (playerSelection != "rock" && playerSelection != "paper" && playerSelection != "sissors"){
+    while (playerSelection != "rock" && playerSelection != "paper" && playerSelection != "sissors" || playerSelection == null){
         playerSelection = prompt(` ${playerSelection} is not a correct answer, Please choose: Rock, Paper, or Sissors`, "");
-        playerSelection = playerSelection.toLowerCase();
+        if(playerSelection != null) {playerSelection = playerSelection.toLowerCase();}
     }//Make sure player input is correct, or ask again
+
     return playerSelection;
 }
 
